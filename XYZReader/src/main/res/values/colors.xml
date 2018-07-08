@@ -26,5 +26,6 @@
     <color name="theme_accent">#ffe02c</color>
     <color name="theme_accent_dark">#c8af00</color>
     <color name="theme_accent_light">#ffff66</color>
+    <color name="secondary_text">#616161</color>
     <color name="ltgray">#ffe0e0e0</color>
 </resources>

@@ -49,6 +49,7 @@
                 <android.support.design.widget.CoordinatorLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:elevation="@dimen/detail_coord_elevation"
                     android:layoutAnimation="@anim/layout_animation_from_bottom">
 
                     <LinearLayout

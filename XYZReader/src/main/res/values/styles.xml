@@ -20,6 +20,7 @@
     <style name="AppTheme" parent="android:Theme.Material">
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowReenterTransition">@android:transition/slide_top</item>
+        <item name="android:windowExitTransition">@transition/grid_exit</item>
     </style>
 
     <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">
@@ -36,6 +37,8 @@
     </style>
 
     <style name="ThemeListItemSubTitle" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">2</item>
     </style>
