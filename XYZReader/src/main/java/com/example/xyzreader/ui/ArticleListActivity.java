@@ -153,20 +153,15 @@ public class ArticleListActivity extends ActionBarActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String transitionName = vh.thumbnailView.getTransitionName();
-
-                    Bundle bundle = ActivityOptions
-                            .makeSceneTransitionAnimation(
-                                    ArticleListActivity.this,
-                                    vh.thumbnailView,
-                                    vh.thumbnailView.getTransitionName())
-                            .toBundle();
-
 
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
-                    vh.thumbnailView.setTransitionName(transitionName);
-                    startActivity(intent, bundle);
+                    intent.putExtra(ArticleDetailFragment.ARG_TRANSITION_NAME, vh.thumbnailView.getTransitionName() );
+
+
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+                            ArticleListActivity.this, vh.thumbnailView, vh.thumbnailView.getTransitionName());
+                    startActivity(intent, options.toBundle());
                 }
             });
             return vh;
