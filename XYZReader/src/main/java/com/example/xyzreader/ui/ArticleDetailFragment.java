@@ -23,6 +23,8 @@ import android.support.v7.graphics.Palette;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
+import android.transition.Scene;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +62,8 @@ public class ArticleDetailFragment extends Fragment implements
     private int mTopInset;
     private View mPhotoContainerView;
     private ImageView mPhotoView;
+    private ImageView mIvShowMore;
+    private TextView mBodyView;
     private int mScrollY;
     private int mPosition;
     private boolean mIsCard = false;
@@ -146,6 +150,13 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
+        mIvShowMore = (ImageView) mRootView.findViewById(R.id.iv_show_more);
+        mIvShowMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mPhotoView.setTransitionName(getString(R.string.transition_photo) + mPosition);
@@ -218,10 +229,10 @@ public class ArticleDetailFragment extends Fragment implements
         TextView titleView = (TextView) mRootView.findViewById(R.id.tv_article_title);
         TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
         bylineView.setMovementMethod(new LinkMovementMethod());
-        TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
+        mBodyView = (TextView) mRootView.findViewById(R.id.article_body);
 
 
-        bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
+        mBodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
 
         if (mCursor != null) {
             mRootView.setAlpha(0);
@@ -247,10 +258,10 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
-//            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
-//            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
+//            mBodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+//            mBodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
 //                    .substring(0,1000).replaceAll("(\r\n|\n)", "<br />")));
-            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
+            mBodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
                     .replaceAll("\r\n\r\n", "<br /><br />")
                     .replaceAll("\r\n", " ")
                     .replaceAll("  ", "")));
@@ -279,7 +290,7 @@ public class ArticleDetailFragment extends Fragment implements
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
             bylineView.setText("N/A" );
-            bodyView.setText("N/A");
+            mBodyView.setText("N/A");
         }
     }
 
@@ -338,7 +349,12 @@ public class ArticleDetailFragment extends Fragment implements
                         return true;
                     }
                 });
+
+        getActivity().getWindow().setSharedElementReturnTransition(null);
+        getActivity().getWindow().setSharedElementReenterTransition(null);
+        sharedElement.setTransitionName(null);
     }
+
 
 
 }

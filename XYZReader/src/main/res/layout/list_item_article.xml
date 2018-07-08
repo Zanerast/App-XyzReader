@@ -35,7 +35,7 @@
             style="@style/ThemeListItemTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/list_item_title_bottom_padding"
+            android:paddingBottom="@dimen/list_item_title_padding_bottom"
             android:paddingEnd="@dimen/list_item_body_text_padding_side"
             android:paddingStart="@dimen/list_item_body_text_padding_side"
             android:paddingTop="@dimen/list_item_title_top_padding"

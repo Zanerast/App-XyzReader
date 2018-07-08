@@ -33,7 +33,8 @@
 
     <style name="ThemeListItemTitle" parent="TextAppearance.AppCompat.Subhead">
         <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">2</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxLines">1</item>
     </style>
 
     <style name="ThemeListItemSubTitle" parent="TextAppearance.AppCompat.Body1">
