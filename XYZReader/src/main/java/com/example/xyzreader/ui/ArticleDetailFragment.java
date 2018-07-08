@@ -62,7 +62,6 @@ public class ArticleDetailFragment extends Fragment implements
     private int mTopInset;
     private View mPhotoContainerView;
     private ImageView mPhotoView;
-    private ImageView mIvShowMore;
     private TextView mBodyView;
     private int mScrollY;
     private int mPosition;
@@ -147,13 +146,6 @@ public class ArticleDetailFragment extends Fragment implements
                 getActivityCast().onUpButtonFloorChanged(mItemId, ArticleDetailFragment.this);
                 mPhotoContainerView.setTranslationY((int) (mScrollY - mScrollY / PARALLAX_FACTOR));
                 updateStatusBar();
-            }
-        });
-
-        mIvShowMore = (ImageView) mRootView.findViewById(R.id.iv_show_more);
-        mIvShowMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
             }
         });
 
