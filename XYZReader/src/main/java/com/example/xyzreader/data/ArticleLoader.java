@@ -1,7 +1,9 @@
 package com.example.xyzreader.data;
 
 import android.content.Context;
-import android.content.CursorLoader;
+import android.database.Cursor;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.net.Uri;
 import android.util.Log;
 
@@ -12,7 +14,7 @@ public class ArticleLoader extends CursorLoader {
 
     private static final String LOG_TAG = ArticleLoader.class.getName();
 
-    public static ArticleLoader newAllArticlesInstance(Context context) {
+    public static Loader<Cursor> newAllArticlesInstance(Context context) {
         return new ArticleLoader(context, ItemsContract.Items.buildDirUri());
     }
 

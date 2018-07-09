@@ -18,5 +18,5 @@
     <dimen name="detail_body_top_margin">16dp</dimen>
     <dimen name="detail_body_bottom_margin">4dp</dimen>
     <dimen name="detail_title_start_end_padding">6dp</dimen>
-    <integer name="detail_body_text_max_lines">20</integer>
+    <integer name="detail_body_text_max_lines">30</integer>
 </resources>
