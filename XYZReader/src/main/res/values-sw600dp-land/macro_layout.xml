@@ -7,5 +7,5 @@
 
     <dimen name="detail_photo_height">600dp</dimen>
     <dimen name="detail_card_top_margin">256dp</dimen>
-    <dimen name="detail_title_start_end_padding">4dp</dimen>
+    <dimen name="detail_metabar_text_start_end_padding">4dp</dimen>
 </resources>

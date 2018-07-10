@@ -2,6 +2,7 @@
 
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/theme_primary"
@@ -34,72 +35,76 @@
                 app:layout_collapseMode="parallax"
                 app:layout_scrollFlags="scroll|snap" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll|snap"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
         </android.support.design.widget.CollapsingToolbarLayout>
 
 
-        <LinearLayout
-            android:id="@+id/meta_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/detail_metabar_vert_padding"
-            android:background="@color/theme_primary_light"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/detail_metabar_vert_padding"
-            android:paddingLeft="@dimen/detail_inner_horiz_margin"
-            android:paddingRight="@dimen/detail_inner_horiz_margin"
-            android:paddingTop="@dimen/detail_metabar_vert_padding">
-
-            <TextView
-                android:id="@+id/tv_article_title"
-                style="?android:attr/textAppearanceLarge"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed"
-                android:lineSpacingMultiplier="0.9"
-                android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
-                android:paddingEnd="@dimen/detail_title_start_end_padding"
-                android:paddingStart="@dimen/detail_title_start_end_padding"
-                android:textColor="#fff"
-                android:textSize="@dimen/detail_title_text_size"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/article_byline"
-                style="?android:attr/textAppearanceSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#8fff" />
-
-
-        </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
             android:id="@+id/article_body"
-            style="@style/DetailBodyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/detail_inner_horiz_margin"
-            android:layout_marginRight="@dimen/detail_inner_horiz_margin"
+            android:layout_marginEnd="@dimen/detail_metabar_padding_horizontal"
+            android:layout_marginStart="@dimen/detail_metabar_padding_horizontal"
+            android:ellipsize="end"
             android:lineSpacingExtra="8dp"
             android:maxLines="@integer/detail_body_text_max_lines"
             android:paddingBottom="@dimen/detail_body_bottom_margin"
-            android:textSize="20sp" />
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
     </android.support.v4.widget.NestedScrollView>
 
+    <com.example.xyzreader.ui.MaxWidthLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:maxWidth="@dimen/detail_card_max_width"
+        app:layout_anchor="@id/nested_scroll_view"
+        app:layout_anchorGravity="top|center"
+        app:layout_scrollFlags="scroll|enterAlways">
+
+        <LinearLayout
+            android:id="@+id/meta_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:background="@color/theme_primary_light"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/detail_metabar_padding_vertical"
+            android:paddingLeft="@dimen/detail_metabar_padding_horizontal"
+            android:paddingRight="@dimen/detail_metabar_padding_horizontal"
+            android:paddingTop="@dimen/detail_metabar_padding_vertical">
+
+            <TextView
+                android:id="@+id/tv_article_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
+                android:paddingEnd="@dimen/detail_metabar_text_start_end_padding"
+                android:paddingStart="@dimen/detail_metabar_text_start_end_padding"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/detail_title_text_size"
+                tools:text="Title" />
+
+            <TextView
+                android:id="@+id/article_byline"
+                style="?android:attr/textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/detail_metabar_text_start_end_padding"
+                android:paddingStart="@dimen/detail_metabar_text_start_end_padding"
+                android:textColor="#8fff"
+                tools:text="Sub Title" />
+
+        </LinearLayout>
+    </com.example.xyzreader.ui.MaxWidthLinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/share_fab"
@@ -109,6 +114,7 @@
         android:src="@drawable/ic_share"
         app:layout_anchor="@id/meta_bar"
         app:layout_anchorGravity="bottom|right|end" />
+
 </android.support.design.widget.CoordinatorLayout>
 
 

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- File created by the Android Action Bar Style Generator
 
      Copyright (C) 2012 readyState Software Ltd
@@ -13,28 +14,17 @@
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      See the License for the specific language governing permissions and
      limitations under the License.
--->
-
-<resources>
-
+--><resources>
     <style name="AppTheme" parent="android:Theme.Material">
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowReenterTransition">@android:transition/slide_top</item>
         <item name="android:windowExitTransition">@transition/grid_exit</item>
     </style>
 
-    <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">
-
-    </style>
+    <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar"/>
 
     <style name="Theme.Bacon.Detail">
         <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
-
-    <style name="ThemeListItemTitle" parent="TextAppearance.AppCompat.Subhead">
-        <item name="android:ellipsize">end</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:maxLines">1</item>
     </style>
 
     <style name="ThemeListItemSubTitle" parent="TextAppearance.AppCompat.Body1">
@@ -44,10 +34,9 @@
         <item name="android:maxLines">2</item>
     </style>
 
-    <style name="DetailBodyText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textSize">16sp</item>
+    <style name="ThemeListItemTitle" parent="TextAppearance.AppCompat.Subhead">
         <item name="android:ellipsize">end</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxLines">1</item>
     </style>
-
 </resources>
