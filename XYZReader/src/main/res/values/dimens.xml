@@ -2,13 +2,16 @@
 <resources>
     <item format="float" name="detail_body_line_spacing_multiplier" type="fraction">1.25</item>
 
+    <dimen name="metabar_elevation">4dp</dimen>
+
     <dimen name="detail_body_text_size">18sp</dimen>
+    <dimen name="detail_body_elevation">4dp</dimen>
     <dimen name="detail_coord_elevation">4dp</dimen>
     <dimen name="detail_show_more">2dp</dimen>
-    <dimen name="detail_title_text_size">26sp</dimen>
+    <dimen name="detail_title_text_size">24sp</dimen>
 
     <dimen name="fab_elevation">4dp</dimen>
-    <dimen name="fab_margin">18dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_press_translation_z">6dp</dimen>
 
 

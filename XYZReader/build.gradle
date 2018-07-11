@@ -30,7 +30,6 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.android.support.constraint:constraint-layout:1.1.2'
     compile 'com.android.support:design:25.4.0'
-    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     compile files('libs/volley.jar')

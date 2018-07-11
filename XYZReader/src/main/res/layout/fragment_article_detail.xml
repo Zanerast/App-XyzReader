@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/theme_primary"
@@ -35,76 +35,84 @@
                 app:layout_collapseMode="parallax"
                 app:layout_scrollFlags="scroll|snap" />
 
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin" />
+
         </android.support.design.widget.CollapsingToolbarLayout>
 
 
     </android.support.design.widget.AppBarLayout>
 
+
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nested_scroll_view"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
             android:id="@+id/article_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/detail_metabar_padding_horizontal"
-            android:layout_marginStart="@dimen/detail_metabar_padding_horizontal"
+            android:layout_marginEnd="@dimen/detail_metabar_margin_horizontal"
+            android:layout_marginStart="@dimen/detail_metabar_margin_horizontal"
+            android:background="@android:color/white"
+            android:elevation="@dimen/detail_body_elevation"
             android:ellipsize="end"
             android:lineSpacingExtra="8dp"
             android:maxLines="@integer/detail_body_text_max_lines"
             android:paddingBottom="@dimen/detail_body_bottom_margin"
             android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="Body Text" />
     </android.support.v4.widget.NestedScrollView>
 
-    <com.example.xyzreader.ui.MaxWidthLinearLayout
+
+    <LinearLayout
+        android:id="@+id/meta_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="2dp"
-        android:maxWidth="@dimen/detail_card_max_width"
-        app:layout_anchor="@id/nested_scroll_view"
-        app:layout_anchorGravity="top|center"
+        android:layout_gravity="bottom"
+        android:background="@color/theme_primary_light"
+        android:elevation="@dimen/metabar_elevation"
+        android:orientation="vertical"
+        app:layout_anchor="@id/appbar"
+        app:layout_anchorGravity="bottom|center"
         app:layout_scrollFlags="scroll|enterAlways">
 
-        <LinearLayout
-            android:id="@+id/meta_bar"
+        <TextView
+            android:id="@+id/tv_article_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            android:background="@color/theme_primary_light"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/detail_metabar_padding_vertical"
-            android:paddingLeft="@dimen/detail_metabar_padding_horizontal"
-            android:paddingRight="@dimen/detail_metabar_padding_horizontal"
-            android:paddingTop="@dimen/detail_metabar_padding_vertical">
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/detail_body_elevation"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:paddingBottom="@dimen/detail_metabar_title_padding_bottom"
+            android:paddingEnd="@dimen/detail_metabar_text_padding_start_end"
+            android:paddingStart="@dimen/detail_metabar_text_padding_start_end"
+            android:paddingTop="@dimen/detail_metabar_title_margin_top"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/detail_title_text_size"
+            tools:text="Title" />
 
-            <TextView
-                android:id="@+id/tv_article_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
-                android:paddingEnd="@dimen/detail_metabar_text_start_end_padding"
-                android:paddingStart="@dimen/detail_metabar_text_start_end_padding"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/detail_title_text_size"
-                tools:text="Title" />
+        <TextView
+            android:id="@+id/article_byline"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/detail_metabar_byline_padding_bottom"
+            android:paddingEnd="@dimen/detail_metabar_text_padding_start_end"
+            android:paddingStart="@dimen/detail_metabar_text_padding_start_end"
+            android:textColor="#8fff"
+            tools:text="Sub Title" />
 
-            <TextView
-                android:id="@+id/article_byline"
-                style="?android:attr/textAppearanceSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingEnd="@dimen/detail_metabar_text_start_end_padding"
-                android:paddingStart="@dimen/detail_metabar_text_start_end_padding"
-                android:textColor="#8fff"
-                tools:text="Sub Title" />
+    </LinearLayout>
 
-        </LinearLayout>
-    </com.example.xyzreader.ui.MaxWidthLinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/share_fab"
@@ -116,6 +124,4 @@
         app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>
-
-
 

@@ -2,9 +2,9 @@
     <!-- detail -->
     <dimen name="detail_photo_height">384dp</dimen>
     <dimen name="detail_card_top_margin">384dp</dimen>
-    <dimen name="detail_metabar_padding_horizontal">64dp</dimen>
+    <dimen name="detail_metabar_margin_horizontal">64dp</dimen>
     <dimen name="detail_metabar_padding_vertical">32dp</dimen>
-    <dimen name="detail_metabar_title_bottom_padding">8dp</dimen>
+    <dimen name="detail_metabar_title_padding_bottom">8dp</dimen>
     <dimen name="detail_body_bottom_margin">96dp</dimen>
-    <dimen name="detail_metabar_text_start_end_padding">4dp</dimen>
+    <dimen name="detail_metabar_text_padding_start_end">4dp</dimen>
 </resources>

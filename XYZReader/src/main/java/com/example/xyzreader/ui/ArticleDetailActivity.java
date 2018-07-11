@@ -1,23 +1,18 @@
 package com.example.xyzreader.ui;
 
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.PagerAdapter;
-import android.util.Log;
+import android.support.v7.graphics.Palette;
 import android.view.Window;
 
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
@@ -46,6 +41,7 @@ public class ArticleDetailActivity extends FragmentActivity
     private View mUpButtonContainer;
     private View mUpButton;
     private Window mWindow;
+    private Palette palette;
 
 
     @Override
@@ -72,11 +68,29 @@ public class ArticleDetailActivity extends FragmentActivity
 
         mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 
+
             @Override
             public void onPageSelected(int position) {
                 if (mCursor != null) {
                     mCursor.moveToPosition(position);
 
+                    ArticleDetailFragment page = (ArticleDetailFragment) mPagerAdapter.getItem(mPager.getCurrentItem());
+                    palette = page.mPalette;
+
+                    if(palette != null) {
+                        mWindow.setStatusBarColor(palette.getDarkMutedColor(getResources().getColor(R.color.ltgray)));
+                    } else {
+                        mWindow.setStatusBarColor(getResources().getColor(R.color.ltgray));
+                    }
+
+
+
+
+//                    mPhotoView.buildDrawingCache();
+//                    Palette mPalette = Palette.from(mPhotoView.getDrawingCache()).generate();
+//
+//                    Window mWindow = getActivity().getWindow();
+//                    mWindow.setStatusBarColor(mPalette.getDarkMutedColor(getResources().getColor(R.color.ltgray)));
                 }
                 mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
             }
