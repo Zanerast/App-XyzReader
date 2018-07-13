@@ -28,4 +28,5 @@
     <color name="theme_accent_light">#ffff66</color>
     <color name="secondary_text">#616161</color>
     <color name="ltgray">#ffe0e0e0</color>
+    <color name="trans">#80000000</color>
 </resources>
