@@ -10,11 +10,9 @@
     <dimen name="detail_show_more">2dp</dimen>
     <dimen name="detail_title_text_size">24sp</dimen>
 
-    <dimen name="fab_elevation">4dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_margin">32dp</dimen>
     <dimen name="fab_press_translation_z">6dp</dimen>
 
 
 
-    <dimen name="rv_padding_bottom">4dp</dimen>
 </resources>

@@ -4,6 +4,7 @@
     android:theme="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/theme_background"
     android:clipToPadding="false"
     android:orientation="vertical">
 
@@ -17,12 +18,11 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/theme_background"
             android:layoutAnimation="@anim/layout_animation_from_bottom"
             android:clipToPadding="true"
-            android:paddingBottom="@dimen/rv_padding_bottom"
-            android:paddingLeft="@dimen/rv_padding_horizontal"
-            android:paddingRight="@dimen/rv_padding_horizontal"
+            android:paddingBottom="@dimen/list_rv_padding_bottom"
+            android:paddingLeft="@dimen/list_rv_padding_horizontal"
+            android:paddingRight="@dimen/list_rv_padding_horizontal"
             android:paddingTop="?actionBarSize"
             android:scrollbarStyle="outsideOverlay" />
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -39,8 +39,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="@dimen/list_toolbar_side_margin"
-            android:layout_marginRight="@dimen/list_toolbar_side_margin"
+            android:layout_marginLeft="@dimen/list_toolbar_margin_horizontal"
+            android:layout_marginRight="@dimen/list_toolbar_margin_horizontal"
             android:background="@color/theme_primary"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 

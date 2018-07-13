@@ -13,10 +13,15 @@ import java.util.GregorianCalendar;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -33,6 +38,8 @@ import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
@@ -41,32 +48,48 @@ import timber.log.Timber;
  * tablets) or a {@link ArticleDetailActivity} on handsets.
  */
 public class ArticleDetailFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, AppBarLayout.OnOffsetChangedListener {
+
+    @BindView(R.id.tv_article_author)
+    TextView tvAuthor;
+    @BindView(R.id.tv_article_date)
+    TextView tvDate;
+    @BindView(R.id.tv_article_body)
+    TextView tvBodyView;
+    @BindView(R.id.iv_photo)
+    ImageView ivPhotoView;
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.share_fab)
+    FloatingActionButton fab;
+    @BindView(R.id.appbar)
+    AppBarLayout appBar;
+    @BindView(R.id.fragment_background)
+    CoordinatorLayout background;
+
 
     public static final String ARG_ITEM_ID = "item_id";
-    private static final float PARALLAX_FACTOR = 1.25f;
     public static final String ARG_TRANSITION_NAME = "transition_name";
 
     private Cursor mCursor;
     private long mItemId;
     private View mRootView;
     private int mMutedColor = 0xFF333333;
+    private static final int PERCENTAGE_TO_SHOW_IMAGE = 20;
+    private int mMaxScrollSize;
     private DrawInsetsFrameLayout mDrawInsetsFrameLayout;
     private ColorDrawable mStatusBarColorDrawable;
-
-    private int mTopInset;
-    private View mPhotoContainerView;
-    private ImageView ivPhotoView;
-    private boolean mIsCard = false;
     public Palette mPalette;
-    private TextView tvBodyView;
-    private Toolbar toolbar;
+    private boolean mIsImageHidden;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
     // Most time functions can only handle 1902 - 2037
     private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2, 1, 1);
+    private int mScrollY;
 
 
     /**
@@ -97,6 +120,32 @@ public class ArticleDetailFragment extends Fragment implements
         Timber.i("ID: itemId" + mItemId + " " + "onCreate()");
 
         setHasOptionsMenu(true);
+
+
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+        if (mMaxScrollSize == 0)
+            mMaxScrollSize = appBarLayout.getTotalScrollRange();
+
+        int currentScrollPercentage = (Math.abs(i)) * 100
+                / mMaxScrollSize;
+
+        if (currentScrollPercentage >= PERCENTAGE_TO_SHOW_IMAGE) {
+            if (!mIsImageHidden) {
+                mIsImageHidden = true;
+
+                ViewCompat.animate(fab).scaleY(0).scaleX(0).start();
+            }
+        }
+
+        if (currentScrollPercentage < PERCENTAGE_TO_SHOW_IMAGE) {
+            if (mIsImageHidden) {
+                mIsImageHidden = false;
+                ViewCompat.animate(fab).scaleY(1).scaleX(1).start();
+            }
+        }
     }
 
     public ArticleDetailActivity getActivityCast() {
@@ -115,10 +164,10 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
+        ButterKnife.bind(this, mRootView);
 
-        ivPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
-
-        mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
+        appBar.addOnOffsetChangedListener(this);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
@@ -150,30 +199,25 @@ public class ArticleDetailFragment extends Fragment implements
             return;
         }
 
-        TextView tvTitleView = (TextView) mRootView.findViewById(R.id.tv_article_title);
-        TextView tvBylineView = (TextView) mRootView.findViewById(R.id.article_byline);
-        tvBodyView = (TextView) mRootView.findViewById(R.id.article_body);
-
         tvBodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
 
         if (mCursor != null) {
             mRootView.setAlpha(0);
             mRootView.setVisibility(View.VISIBLE);
             mRootView.animate().alpha(1);
-            tvTitleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
+            toolbar.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
             Date publishedDate = parsePublishedDate();
+            tvAuthor.setText(Html.fromHtml("By " + mCursor.getString(ArticleLoader.Query.AUTHOR)));
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
-                tvBylineView.setText(Html.fromHtml(
-                        "By " + mCursor.getString(ArticleLoader.Query.AUTHOR) + "\n" +
-                                DateUtils.getRelativeTimeSpanString(
+                tvDate.setText(
+                        Html.fromHtml(DateUtils.getRelativeTimeSpanString(
                                         publishedDate.getTime(),
                                         System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
                                         DateUtils.FORMAT_ABBREV_ALL).toString()));
-
             } else {
                 // If date is before 1902, just show the string
-                tvBylineView.setText(Html.fromHtml("By " + mCursor.getString(ArticleLoader.Query.AUTHOR) + "\n" +
-                        outputFormat.format(publishedDate)));
+                tvDate.setText(
+                        Html.fromHtml(outputFormat.format(publishedDate)));
 
             }
 
@@ -199,10 +243,6 @@ public class ArticleDetailFragment extends Fragment implements
                                                 }
                                             });
                                     ivPhotoView.setImageBitmap(imageContainer.getBitmap());
-                                    mRootView.findViewById(R.id.meta_bar)
-                                            .setBackgroundColor(mMutedColor);
-
-
                                 }
                             }
 
@@ -215,19 +255,22 @@ public class ArticleDetailFragment extends Fragment implements
         } else {
             Timber.e("ID: itemId" + mItemId + " " + "bindViews() mCursor is null");
             mRootView.setVisibility(View.GONE);
-            tvTitleView.setText("N/A");
-            tvBylineView.setText("N/A");
+            toolbar.setTitle("N/A");
+            tvAuthor.setText("N/A");
             tvBodyView.setText("N/A");
         }
     }
 
     private void setColors() {
-        mRootView.findViewById(R.id.meta_bar).setBackgroundColor(mPalette.getDarkMutedColor(getResources().getColor(R.color.theme_primary)));
-        mRootView.findViewById(R.id.appbar).setBackgroundColor(mPalette.getDarkMutedColor(getResources().getColor(R.color.theme_primary)));
+        collapsingToolbar.setBackgroundColor(mPalette.getMutedColor(getResources().getColor(R.color.theme_primary)));
 
-        mRootView.findViewById(R.id.fragment_background).setBackgroundColor(mPalette.getMutedColor(getResources().getColor(R.color.theme_background)));
+        collapsingToolbar.setStatusBarScrimColor(mPalette.getMutedColor(getResources().getColor(R.color.theme_primary)));
+        collapsingToolbar.setStatusBarScrimColor(mPalette.getMutedColor(getResources().getColor(R.color.theme_primary)));
+        fab.setBackgroundColor(mPalette.getVibrantColor(getResources().getColor(R.color.theme_accent)));
+        fab.setColorFilter(mPalette.getVibrantColor(getResources().getColor(R.color.theme_accent)));
 
-
+        mRootView.findViewById(R.id.fragment_background)
+                .setBackgroundColor(mPalette.getDarkMutedColor(getResources().getColor(R.color.ltgray)));
     }
 
 
@@ -271,6 +314,32 @@ public class ArticleDetailFragment extends Fragment implements
         bindViews();
     }
 
+    public int getUpButtonFloor() {
+        if (ivPhotoView == null || ivPhotoView.getHeight() == 0) {
+            return Integer.MAX_VALUE;
+        }
+
+        // account for parallax
+        boolean mIsCard = false;
+        return mIsCard
+                ? (int) ivPhotoView.getTranslationY() + ivPhotoView.getHeight() - mScrollY
+                : ivPhotoView.getHeight() - mScrollY;
+    }
+
+    static float progress(float v, float min, float max) {
+        return constrain((v - min) / (max - min), 0, 1);
+    }
+
+    static float constrain(float val, float min, float max) {
+        if (val < min) {
+            return min;
+        } else if (val > max) {
+            return max;
+        } else {
+            return val;
+        }
+    }
+
 
     public void scheduleStartPostponedTransition(final View sharedElement) {
         sharedElement.getViewTreeObserver().addOnPreDrawListener(
@@ -289,6 +358,8 @@ public class ArticleDetailFragment extends Fragment implements
         getActivity().getWindow().setSharedElementReenterTransition(null);
         sharedElement.setTransitionName(null);
     }
+
+
 
 
 }

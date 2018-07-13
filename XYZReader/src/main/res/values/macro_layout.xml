@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <dimen name="detail_body_bottom_margin">4dp</dimen>
-    <integer name="detail_body_text_max_lines">20</integer>
-    <dimen name="detail_body_top_margin">16dp</dimen>
-    <dimen name="detail_card_max_width">340dp</dimen>
-    <dimen name="detail_card_top_margin">@dimen/detail_photo_height</dimen>
-    <dimen name="detail_inner_margin_from_top">190dp</dimen>
-    <dimen name="detail_inner_vert_margin">32dp</dimen>
-    <bool name="detail_is_card">false</bool>
-    <dimen name="detail_metabar_margin_horizontal">16dp</dimen>
-    <dimen name="detail_metabar_padding_vertical">16dp</dimen>
-    <dimen name="detail_metabar_text_padding_start_end">40dp</dimen>
-    <dimen name="detail_metabar_byline_padding_bottom">16dp</dimen>
-    <dimen name="detail_metabar_title_padding_bottom">4dp</dimen>
-    <dimen name="detail_metabar_title_margin_top">16dp</dimen>
-    <dimen name="detail_photo_height">304dp</dimen>
+    <!-- detail activity-->
+    <dimen name="detail_activity_action_up_width">56dp</dimen>
 
+    <!--detail fragment -->
+    <dimen name="detail_appbar_margin_bottom">102dp</dimen>
+    <dimen name="detail_author_padding_top">8dp</dimen>
+    <dimen name="detail_body_padding_top">4dp</dimen>
+    <integer name="detail_body_text_max_lines">40</integer>
+    <dimen name="detail_card_max_width">340dp</dimen>
+    <dimen name="detail_collapsing_toolbar_height">300dp</dimen>
+    <dimen name="detail_photo_height">304dp</dimen>
+    <dimen name="detail_nested_scroll_overlay">78dp</dimen>
+    <dimen name="detail_toolbar_margin_start">12dp</dimen>
+
+    <!-- fab -->
+    <dimen name="fab_elevation">8dp</dimen>
+
+    <!-- list-->
     <integer name="list_column_count">2</integer>
     <dimen name="list_item_body_text_padding_bottom">8dp</dimen>
-    <dimen name="list_item_body_text_padding_side">8dp</dimen>
-    <dimen name="list_item_side_photo_margin_side">8dp</dimen>
+    <dimen name="list_item_body_text_padding_horizontal">8dp</dimen>
+    <dimen name="list_item_photo_margin_horizontal">8dp</dimen>
+    <dimen name="list_item_photo_margin_top">8dp</dimen>
     <dimen name="list_item_title_padding_bottom">2dp</dimen>
     <dimen name="list_item_title_top_padding">4dp</dimen>
-    <dimen name="list_toolbar_side_margin">0dp</dimen>
-
-    <!-- list -->
-    <dimen name="rv_padding_horizontal">4dp</dimen>
+    <dimen name="list_rv_padding_bottom">4dp</dimen>
+    <dimen name="list_rv_padding_horizontal">4dp</dimen>
+    <dimen name="list_toolbar_margin_horizontal">0dp</dimen>
 </resources>

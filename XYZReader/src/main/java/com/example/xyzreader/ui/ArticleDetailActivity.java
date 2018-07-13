@@ -56,41 +56,17 @@ public class ArticleDetailActivity extends FragmentActivity
         }
         setContentView(R.layout.activity_article_detail);
 
-        mWindow = getWindow();
-        mWindow.setStatusBarColor(getResources().getColor(R.color.theme_primary_dark));
-
         getSupportLoaderManager().initLoader(0, null, this);
 
         mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
-
         mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-
-
             @Override
             public void onPageSelected(int position) {
                 if (mCursor != null) {
                     mCursor.moveToPosition(position);
-
-                    ArticleDetailFragment page = (ArticleDetailFragment) mPagerAdapter.getItem(mPager.getCurrentItem());
-                    palette = page.mPalette;
-
-                    if(palette != null) {
-                        mWindow.setStatusBarColor(palette.getDarkMutedColor(getResources().getColor(R.color.ltgray)));
-                    } else {
-                        mWindow.setStatusBarColor(getResources().getColor(R.color.ltgray));
-                    }
-
-
-
-
-//                    mPhotoView.buildDrawingCache();
-//                    Palette mPalette = Palette.from(mPhotoView.getDrawingCache()).generate();
-//
-//                    Window mWindow = getActivity().getWindow();
-//                    mWindow.setStatusBarColor(mPalette.getDarkMutedColor(getResources().getColor(R.color.ltgray)));
                 }
                 mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
             }
@@ -158,13 +134,6 @@ public class ArticleDetailActivity extends FragmentActivity
         Timber.v("onLoaderReset()");
         mCursor = null;
         mPagerAdapter.notifyDataSetChanged();
-    }
-
-    public void onUpButtonFloorChanged(long itemId, ArticleDetailFragment fragment) {
-        if (itemId == mSelectedItemId) {
-            mSelectedItemUpButtonFloor = fragment.getUpButtonFloor();
-            updateUpButtonPosition();
-        }
     }
 
     private void updateUpButtonPosition() {
