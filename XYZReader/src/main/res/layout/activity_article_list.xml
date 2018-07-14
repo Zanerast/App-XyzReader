@@ -50,7 +50,7 @@
             android:paddingLeft="@dimen/list_rv_padding_horizontal"
             android:paddingRight="@dimen/list_rv_padding_horizontal"
             android:scrollbarStyle="outsideOverlay" />
-        
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>
