@@ -2,6 +2,8 @@ package com.example.xyzreader.ui;
 
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.graphics.Palette;
 import android.util.TypedValue;
 import android.view.Window;
@@ -24,6 +26,7 @@ import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 
+import butterknife.BindView;
 import timber.log.Timber;
 
 /**
@@ -31,7 +34,6 @@ import timber.log.Timber;
  */
 public class ArticleDetailActivity extends FragmentActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
-
     private Cursor mCursor;
     private long mStartId;
 
@@ -153,6 +155,7 @@ public class ArticleDetailActivity extends FragmentActivity
         int upButtonNormalBottom = mTopInset + mUpButton.getHeight();
         mUpButton.setTranslationY(Math.min(mSelectedItemUpButtonFloor - upButtonNormalBottom, 0));
     }
+
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
 

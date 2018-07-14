@@ -6,8 +6,8 @@
 
     <!--detail fragment -->
     <dimen name="detail_appbar_margin_bottom">102dp</dimen>
-    <dimen name="detail_author_padding_top">10dp</dimen>
-    <dimen name="detail_body_padding_top">6dp</dimen>
+    <dimen name="detail_author_padding_top">12dp</dimen>
+    <dimen name="detail_body_padding_top">20dp</dimen>
     <integer name="detail_body_text_max_lines">40</integer>
     <dimen name="detail_card_max_width">340dp</dimen>
     <dimen name="detail_collapsing_toolbar_height">300dp</dimen>
@@ -30,4 +30,5 @@
     <dimen name="list_rv_padding_bottom">4dp</dimen>
     <dimen name="list_rv_padding_horizontal">4dp</dimen>
     <dimen name="list_toolbar_margin_horizontal">0dp</dimen>
+    <dimen name="list_refresh_margin_top">30dp</dimen>
 </resources>

@@ -24,6 +24,7 @@ import android.support.v4.app.ShareCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -50,7 +51,8 @@ import timber.log.Timber;
  * tablets) or a {@link ArticleDetailActivity} on handsets.
  */
 public class ArticleDetailFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, AppBarLayout.OnOffsetChangedListener {
+        LoaderManager.LoaderCallbacks<Cursor>, AppBarLayout.OnOffsetChangedListener,
+        NestedScrollView.OnScrollChangeListener {
 
     @BindView(R.id.tv_article_author)
     TextView tvAuthor;
@@ -70,6 +72,8 @@ public class ArticleDetailFragment extends Fragment implements
     AppBarLayout appBar;
     @BindView(R.id.fragment_background)
     CoordinatorLayout background;
+    @BindView(R.id.scroll_view)
+    NestedScrollView scrollView;
 
 
     public static final String ARG_ITEM_ID = "item_id";
@@ -150,10 +154,6 @@ public class ArticleDetailFragment extends Fragment implements
         }
     }
 
-    public ArticleDetailActivity getActivityCast() {
-        return (ArticleDetailActivity) getActivity();
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -169,6 +169,8 @@ public class ArticleDetailFragment extends Fragment implements
         ButterKnife.bind(this, mRootView);
 
         appBar.addOnOffsetChangedListener(this);
+        scrollView.setOnScrollChangeListener(this);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,6 +182,54 @@ public class ArticleDetailFragment extends Fragment implements
         });
 
         return mRootView;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        Timber.i("ID: itemId" + mItemId + " " + "onCreateLoader() LoaderId(int i): " + i);
+
+        return ArticleLoader.newInstanceForItemId(getActivity(), mItemId);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+
+        if (!isAdded()) {
+            if (cursor != null) {
+                cursor.close();
+            }
+            return;
+        }
+
+        this.mCursor = cursor;
+
+        if (this.mCursor != null && !this.mCursor.moveToFirst()) {
+            Timber.e("ID: itemId" + mItemId + " " + "Error reading item detail cursor");
+            Timber.i("ID: itemId" + mItemId + " " + "onLoadFinished() cursor count: " + ((cursor != null) ? cursor.getCount() : 0));
+            this.mCursor.close();
+            this.mCursor = null;
+        } else {
+            bindViews();
+        }
+
+        int loadId = (int) mItemId;
+        getLoaderManager().destroyLoader(loadId);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        Timber.e("ID: itemId" + mItemId + " " + "onLoaderReset()");
+
+        mCursor = null;
+        bindViews();
+    }
+
+    @Override
+    public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+        if (scrollY > (v.getMeasuredHeight() / 2)){
+
+            tvBodyView.setMaxLines(Integer.MAX_VALUE);
+        }
     }
 
     private Date parsePublishedDate() {
@@ -294,47 +344,6 @@ public class ArticleDetailFragment extends Fragment implements
         }
     }
 
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        Timber.i("ID: itemId" + mItemId + " " + "onCreateLoader() LoaderId(int i): " + i);
-
-        return ArticleLoader.newInstanceForItemId(getActivity(), mItemId);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-
-        if (!isAdded()) {
-            if (cursor != null) {
-                cursor.close();
-            }
-            return;
-        }
-
-        this.mCursor = cursor;
-
-        if (this.mCursor != null && !this.mCursor.moveToFirst()) {
-            Timber.e("ID: itemId" + mItemId + " " + "Error reading item detail cursor");
-            Timber.i("ID: itemId" + mItemId + " " + "onLoadFinished() cursor count: " + ((cursor != null) ? cursor.getCount() : 0));
-            this.mCursor.close();
-            this.mCursor = null;
-        } else {
-            bindViews();
-        }
-
-        int loadId = (int) mItemId;
-        getLoaderManager().destroyLoader(loadId);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        Timber.e("ID: itemId" + mItemId + " " + "onLoaderReset()");
-
-        mCursor = null;
-        bindViews();
-    }
-
     public int getUpButtonFloor() {
         if (ivPhotoView == null || ivPhotoView.getHeight() == 0) {
             return Integer.MAX_VALUE;
@@ -379,6 +388,5 @@ public class ArticleDetailFragment extends Fragment implements
         getActivity().getWindow().setSharedElementReenterTransition(null);
         sharedElement.setTransitionName(null);
     }
-
 
 }
