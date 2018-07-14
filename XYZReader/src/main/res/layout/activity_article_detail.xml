@@ -1,5 +1,4 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/trans"
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,6 +13,7 @@
         android:id="@+id/up_container"
         android:background="@android:color/transparent"
         android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/detail_activity_action_up_margin_top"
         android:layout_height="?actionBarSize">
 
         <ImageButton

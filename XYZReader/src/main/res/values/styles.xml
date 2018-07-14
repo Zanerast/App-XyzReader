@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- File created by the Android Action Bar Style Generator
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!-- File created by the Android Action Bar Style Generator
 
      Copyright (C) 2012 readyState Software Ltd
 
@@ -14,14 +13,26 @@
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      See the License for the specific language governing permissions and
      limitations under the License.
---><resources>
-    <style name="AppTheme" parent="android:Theme.Material">
+-->
+<resources>
+
+    <style name="TransStatusBar" parent="@style/Theme.Design.Light.NoActionBar">
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowReenterTransition">@android:transition/slide_top</item>
         <item name="android:windowExitTransition">@transition/grid_exit</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+    <!--<style name="TransStatusBar" parent="@style/Theme.Design.Light.NoActionBar">-->
+        <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
+    <!--</style>-->
+
+    <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar" />
 
     <style name="Theme.Bacon.Detail">
         <item name="android:statusBarColor">@android:color/transparent</item>

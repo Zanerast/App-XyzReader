@@ -18,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -47,13 +48,13 @@ public class ArticleDetailActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().getDecorView().setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 
-            postponeEnterTransition();
-        }
+                postponeEnterTransition();
+            }
         setContentView(R.layout.activity_article_detail);
 
         getSupportLoaderManager().initLoader(0, null, this);
@@ -102,6 +103,8 @@ public class ArticleDetailActivity extends FragmentActivity
                 mSelectedItemId = mStartId;
             }
         }
+
+        updateStatusBar();
     }
 
     @Override
@@ -138,8 +141,12 @@ public class ArticleDetailActivity extends FragmentActivity
         mPagerAdapter.notifyDataSetChanged();
     }
 
-    private void updateStatusBar(){
-        getWindow().setStatusBarColor(getResources().getColor(R.color.trans));
+    private void updateStatusBar() {
+        Window window = getWindow();
+        window.setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        window.setStatusBarColor(getResources().getColor(R.color.theme_accent));
     }
 
     private void updateUpButtonPosition() {

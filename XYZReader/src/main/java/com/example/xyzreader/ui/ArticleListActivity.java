@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -74,6 +75,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         mWindow = getWindow();
         mWindow.setStatusBarColor(getResources().getColor(R.color.theme_primary_dark));
+
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 

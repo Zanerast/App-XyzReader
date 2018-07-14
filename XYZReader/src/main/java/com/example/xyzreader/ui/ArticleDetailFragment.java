@@ -270,7 +270,7 @@ public class ArticleDetailFragment extends Fragment implements
             int toolbarColor = mPalette.getDarkVibrantColor(getResources().getColor(R.color.theme_primary));
             collapsingToolbar.setBackgroundColor(toolbarColor);
             collapsingToolbar.setContentScrimColor(toolbarColor);
-            collapsingToolbar.setStatusBarScrimColor(toolbarColor);
+//            collapsingToolbar.setStatusBarScrimColor(toolbarColor);
 
             fab.setBackgroundTintList(ColorStateList.valueOf(
                     mPalette.getLightVibrantColor(getResources().getColor(R.color.theme_accent))));
