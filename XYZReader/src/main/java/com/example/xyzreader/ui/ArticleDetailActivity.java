@@ -42,8 +42,6 @@ public class ArticleDetailActivity extends FragmentActivity
     private MyPagerAdapter mPagerAdapter;
     private View mUpButtonContainer;
     private View mUpButton;
-    private Window mWindow;
-    private Palette palette;
 
 
     @Override
@@ -138,6 +136,10 @@ public class ArticleDetailActivity extends FragmentActivity
         Timber.v("onLoaderReset()");
         mCursor = null;
         mPagerAdapter.notifyDataSetChanged();
+    }
+
+    private void updateStatusBar(){
+        getWindow().setStatusBarColor(getResources().getColor(R.color.trans));
     }
 
     private void updateUpButtonPosition() {

@@ -1,6 +1,7 @@
 package com.example.xyzreader.ui;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -21,6 +22,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.Loader;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -211,9 +213,9 @@ public class ArticleDetailFragment extends Fragment implements
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
                 tvDate.setText(
                         Html.fromHtml(DateUtils.getRelativeTimeSpanString(
-                                        publishedDate.getTime(),
-                                        System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
-                                        DateUtils.FORMAT_ABBREV_ALL).toString()));
+                                publishedDate.getTime(),
+                                System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
+                                DateUtils.FORMAT_ABBREV_ALL).toString()));
             } else {
                 // If date is before 1902, just show the string
                 tvDate.setText(
@@ -262,15 +264,34 @@ public class ArticleDetailFragment extends Fragment implements
     }
 
     private void setColors() {
-        collapsingToolbar.setBackgroundColor(mPalette.getMutedColor(getResources().getColor(R.color.theme_primary)));
+        Timber.i(tvAuthor.getText().toString());
+        if (mPalette.getVibrantSwatch() != null) {
+            Timber.i("Vibrant Swatch");
+            int toolbarColor = mPalette.getDarkVibrantColor(getResources().getColor(R.color.theme_primary));
+            collapsingToolbar.setBackgroundColor(toolbarColor);
+            collapsingToolbar.setContentScrimColor(toolbarColor);
+            collapsingToolbar.setStatusBarScrimColor(toolbarColor);
 
-        collapsingToolbar.setStatusBarScrimColor(mPalette.getMutedColor(getResources().getColor(R.color.theme_primary)));
-        collapsingToolbar.setStatusBarScrimColor(mPalette.getMutedColor(getResources().getColor(R.color.theme_primary)));
-        fab.setBackgroundColor(mPalette.getVibrantColor(getResources().getColor(R.color.theme_accent)));
-        fab.setColorFilter(mPalette.getVibrantColor(getResources().getColor(R.color.theme_accent)));
+            fab.setBackgroundTintList(ColorStateList.valueOf(
+                    mPalette.getLightVibrantColor(getResources().getColor(R.color.theme_accent))));
 
-        mRootView.findViewById(R.id.fragment_background)
-                .setBackgroundColor(mPalette.getDarkMutedColor(getResources().getColor(R.color.ltgray)));
+            background.setBackgroundColor(
+                    mPalette.getVibrantColor(getResources().getColor(R.color.ltgray)));
+        } else {
+            Timber.i("Muted Swatch");
+
+            int toolbarColor = mPalette.getDarkMutedColor(getResources().getColor(R.color.theme_primary));
+            collapsingToolbar.setBackgroundColor(toolbarColor);
+            collapsingToolbar.setContentScrimColor(toolbarColor);
+            collapsingToolbar.setStatusBarScrimColor(toolbarColor);
+
+
+            fab.setBackgroundTintList(ColorStateList.valueOf(
+                    mPalette.getLightMutedColor(getResources().getColor(R.color.theme_accent))));
+
+            background.setBackgroundColor(
+                    mPalette.getMutedColor(getResources().getColor(R.color.ltgray)));
+        }
     }
 
 
@@ -358,8 +379,6 @@ public class ArticleDetailFragment extends Fragment implements
         getActivity().getWindow().setSharedElementReenterTransition(null);
         sharedElement.setTransitionName(null);
     }
-
-
 
 
 }
