@@ -9,8 +9,12 @@
     <dimen name="detail_coord_elevation">4dp</dimen>
     <dimen name="detail_show_more">2dp</dimen>
     <dimen name="detail_title_text_size">24sp</dimen>
+    <integer name="detail_body_text_max_lines">40</integer>
 
-    <dimen name="fab_margin">32dp</dimen>
+    <integer name="list_column_count">1</integer>
+    <dimen name="list_item_title_text_size">18sp</dimen>
+    <dimen name="list_item_subtitle_text_size">12sp</dimen>
+
     <dimen name="fab_press_translation_z">6dp</dimen>
 
 

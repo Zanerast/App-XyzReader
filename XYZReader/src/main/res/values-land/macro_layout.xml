@@ -1,7 +1,8 @@
 <resources>
 
     <!-- list -->
-    <integer name="list_column_count">3</integer>
+    <integer name="list_column_count">2</integer>
+    <dimen name="list_item_card_margin_horizontal">12dp</dimen>
 
     <!-- detail -->
     <dimen name="detail_photo_height">224dp</dimen>

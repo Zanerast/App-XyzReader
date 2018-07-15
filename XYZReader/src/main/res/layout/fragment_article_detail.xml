@@ -38,7 +38,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:background="@drawable/image_protector"
+                    android:background="@drawable/detail_image_protector"
                     android:layout_height="match_parent" />
 
 
