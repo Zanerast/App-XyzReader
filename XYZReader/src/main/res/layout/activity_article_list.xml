@@ -46,7 +46,7 @@
             android:layout_height="match_parent"
             android:background="@color/theme_background"
             android:layoutAnimation="@anim/layout_animation_from_bottom"
-            android:clipToPadding="true"
+            android:clipToPadding="false"
             android:paddingBottom="@dimen/list_rv_padding_bottom"
             android:paddingLeft="@dimen/list_rv_padding_horizontal"
             android:paddingRight="@dimen/list_rv_padding_horizontal"

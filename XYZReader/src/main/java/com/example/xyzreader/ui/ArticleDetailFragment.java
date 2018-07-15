@@ -19,10 +19,10 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.Loader;
-import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
@@ -78,6 +78,7 @@ public class ArticleDetailFragment extends Fragment implements
 
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_TRANSITION_NAME = "transition_name";
+    private static final String ARG_ITEM_POSITION = "item_position";
 
     private Cursor mCursor;
     private long mItemId;
@@ -89,6 +90,8 @@ public class ArticleDetailFragment extends Fragment implements
     private ColorDrawable mStatusBarColorDrawable;
     public Palette mPalette;
     private boolean mIsImageHidden;
+    private String mTransitionName;
+    private int mPosition;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
@@ -105,11 +108,12 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
-    public static ArticleDetailFragment newInstance(long itemId) {
+    public static ArticleDetailFragment newInstance(long itemId, int position) {
         ArticleDetailFragment fragment = new ArticleDetailFragment();
 
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_ITEM_ID, itemId);
+        arguments.putInt(ARG_ITEM_POSITION, position);
         fragment.setArguments(arguments);
 
         return fragment;
@@ -120,14 +124,14 @@ public class ArticleDetailFragment extends Fragment implements
 
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
+        if (getArguments().containsKey(ARG_ITEM_ID) && getArguments().containsKey(ARG_ITEM_POSITION)) {
             mItemId = getArguments().getLong(ARG_ITEM_ID);
+            mPosition = getArguments().getInt(ARG_ITEM_POSITION);
         }
-        Timber.i("ID: itemId" + mItemId + " " + "onCreate()");
+
+        Timber.i("mItemId: " + mItemId + ". mPostion: " + mPosition);
 
         setHasOptionsMenu(true);
-
-
     }
 
     @Override
@@ -170,6 +174,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         appBar.addOnOffsetChangedListener(this);
         scrollView.setOnScrollChangeListener(this);
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,7 +252,6 @@ public class ArticleDetailFragment extends Fragment implements
         Timber.v("ID: itemId" + mItemId + " " + "bindViews()");
 
         if (mRootView == null) {
-            Timber.e("ID: itemId" + mItemId + " " + "bindViews() mRootView = null");
             return;
         }
 
@@ -295,7 +299,11 @@ public class ArticleDetailFragment extends Fragment implements
                                                 }
                                             });
                                     ivPhotoView.setImageBitmap(imageContainer.getBitmap());
+
+                                    scheduleStartPostponedTransition(ivPhotoView);
+
                                 }
+
                             }
 
                             @Override
@@ -303,6 +311,9 @@ public class ArticleDetailFragment extends Fragment implements
                             }
                         });
             }
+
+            mTransitionName = getResources().getString(R.string.transition_photo) + mPosition;
+            ivPhotoView.setTransitionName(mTransitionName);
             scheduleStartPostponedTransition(ivPhotoView);
         } else {
             Timber.e("ID: itemId" + mItemId + " " + "bindViews() mCursor is null");
@@ -316,11 +327,9 @@ public class ArticleDetailFragment extends Fragment implements
     private void setColors() {
         Timber.i(tvAuthor.getText().toString());
         if (mPalette.getVibrantSwatch() != null) {
-            Timber.i("Vibrant Swatch");
             int toolbarColor = mPalette.getDarkVibrantColor(getResources().getColor(R.color.theme_primary));
             collapsingToolbar.setBackgroundColor(toolbarColor);
             collapsingToolbar.setContentScrimColor(toolbarColor);
-//            collapsingToolbar.setStatusBarScrimColor(toolbarColor);
 
             fab.setBackgroundTintList(ColorStateList.valueOf(
                     mPalette.getLightVibrantColor(getResources().getColor(R.color.theme_accent))));
@@ -328,8 +337,6 @@ public class ArticleDetailFragment extends Fragment implements
             background.setBackgroundColor(
                     mPalette.getVibrantColor(getResources().getColor(R.color.ltgray)));
         } else {
-            Timber.i("Muted Swatch");
-
             int toolbarColor = mPalette.getDarkMutedColor(getResources().getColor(R.color.theme_primary));
             collapsingToolbar.setBackgroundColor(toolbarColor);
             collapsingToolbar.setContentScrimColor(toolbarColor);
@@ -372,6 +379,7 @@ public class ArticleDetailFragment extends Fragment implements
 
 
     public void scheduleStartPostponedTransition(final View sharedElement) {
+        Timber.i("Transition Name: " + mTransitionName);
         sharedElement.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
                     @Override
@@ -383,10 +391,6 @@ public class ArticleDetailFragment extends Fragment implements
                         return true;
                     }
                 });
-
-        getActivity().getWindow().setSharedElementReturnTransition(null);
-        getActivity().getWindow().setSharedElementReenterTransition(null);
-        sharedElement.setTransitionName(null);
     }
 
 }

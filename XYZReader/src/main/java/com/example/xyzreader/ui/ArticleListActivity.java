@@ -17,6 +17,7 @@ import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.example.xyzreader.MyDebugTree;
@@ -118,6 +119,23 @@ public class ArticleListActivity extends AppCompatActivity implements
         refresh();
     }
 
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+        postponeEnterTransition();
+        recyclerView.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        recyclerView.requestLayout();
+                        startPostponedEnterTransition();
+                        return true;
+                    }
+                }
+        );
+    }
+
     private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -152,13 +170,17 @@ public class ArticleListActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View view) {
 
+                    String transitionName = getResources().getString(R.string.transition_photo) + vh.getAdapterPosition();
+                    Timber.i("Start Transition: " + transitionName);
+
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
-                    intent.putExtra(ArticleDetailFragment.ARG_TRANSITION_NAME, vh.thumbnailView.getTransitionName() );
 
-
+                    vh.thumbnailView.setTransitionName(transitionName);
                     ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
-                            ArticleListActivity.this, vh.thumbnailView, vh.thumbnailView.getTransitionName());
+                            ArticleListActivity.this, vh.thumbnailView,
+                            transitionName);
+
                     startActivity(intent, options.toBundle());
                 }
             });
