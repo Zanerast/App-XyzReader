@@ -62,6 +62,7 @@ public class ArticleDetailActivity extends FragmentActivity
         setContentView(R.layout.activity_article_detail);
 
         postponeEnterTransition();
+        setEnterSharedElementCallback(enterTransitionCallback);
 
         getSupportLoaderManager().initLoader(0, null, this);
 
@@ -132,7 +133,6 @@ public class ArticleDetailActivity extends FragmentActivity
 
         mCursor = cursor;
         mPagerAdapter.notifyDataSetChanged();
-        setEnterSharedElementCallback(enterTransitionCallback);
 
         // Select the start ID
         if (mStartId > 0) {
@@ -177,6 +177,8 @@ public class ArticleDetailActivity extends FragmentActivity
             View view = null;
 
             if (mPager.getChildCount() > 0) {
+                Timber.i("enterTransitionCallback()");
+
                 int pageCount = mPager.getCurrentItem();
                 ArticleDetailFragment fragment = (ArticleDetailFragment) mPager.getAdapter().instantiateItem(mPager, pageCount);
                 view = fragment.getView().findViewById(R.id.iv_photo);
@@ -184,6 +186,7 @@ public class ArticleDetailActivity extends FragmentActivity
 
             if (view != null) {
                 sharedElements.put(names.get(0), view);
+                Timber.i("Transition Name: " + sharedElements.get(names.get(0)).getTransitionName());
             }
         }
     };

@@ -7,12 +7,10 @@
     android:background="@color/theme_background"
     android:orientation="vertical">
 
-
     <FrameLayout
         android:id="@+id/toolbar_container"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:background="@color/theme_primary"
         android:elevation="4dp">
 
         <android.support.v7.widget.Toolbar
@@ -21,8 +19,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
             android:layout_marginLeft="@dimen/list_toolbar_margin_horizontal"
-            android:layout_marginRight="@dimen/list_toolbar_margin_horizontal"
             android:background="@color/theme_primary"
+            android:layout_marginRight="@dimen/list_toolbar_margin_horizontal"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <ImageView

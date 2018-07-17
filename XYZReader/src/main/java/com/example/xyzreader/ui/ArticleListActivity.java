@@ -148,9 +148,11 @@ public class ArticleListActivity extends AppCompatActivity implements
 
             if (ArticleDetailActivity.sSelectedIndex < 0) {
                 // When transitioning out, use the view already specified in makeSceneTransition
+                Timber.i("selectedIndex < 0");
             } else {
                 // When transitioning back in, use the thumbnail at index the user had swiped to in the pager activity
                 sharedElements.put(names.get(0), gridLayoutManager.findViewByPosition(ArticleDetailActivity.sSelectedIndex));
+                Timber.i("Shared Element Name: " + sharedElements.get(names.get(0)).getTransitionName());
                 ArticleDetailActivity.sSelectedIndex = -1;
             }
         }
@@ -183,7 +185,6 @@ public class ArticleListActivity extends AppCompatActivity implements
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
                     intent.putExtra(ArticleDetailActivity.EXTRA_POSITION, vh.getAdapterPosition());
-
 
                     String transitionName = getResources().getString(R.string.transition_name) + vh.getAdapterPosition();
 

@@ -114,7 +114,6 @@
                         android:id="@+id/tv_article_body"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/white"
                         android:ellipsize="end"
                         android:lineSpacingExtra="8dp"
                         android:maxLines="@integer/detail_body_text_max_lines"
