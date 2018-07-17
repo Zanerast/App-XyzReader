@@ -28,10 +28,14 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -73,6 +77,8 @@ public class ArticleDetailFragment extends Fragment implements
     CoordinatorLayout background;
     @BindView(R.id.scroll_view)
     NestedScrollView scrollView;
+    @BindView(R.id.body_view)
+    MaxWidthLinearLayout bodyView;
 
 
     public static final String ARG_ITEM_ID = "item_id";
@@ -84,7 +90,6 @@ public class ArticleDetailFragment extends Fragment implements
     private int mMutedColor = 0xFF333333;
     private static final int PERCENTAGE_TO_SHOW_IMAGE = 20;
     private int mMaxScrollSize;
-    private DrawInsetsFrameLayout mDrawInsetsFrameLayout;
     private ColorDrawable mStatusBarColorDrawable;
     public Palette mPalette;
     private boolean mIsImageHidden;
@@ -171,7 +176,6 @@ public class ArticleDetailFragment extends Fragment implements
         appBar.addOnOffsetChangedListener(this);
         scrollView.setOnScrollChangeListener(this);
 
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -230,6 +234,8 @@ public class ArticleDetailFragment extends Fragment implements
             tvBodyView.setMaxLines(Integer.MAX_VALUE);
         }
     }
+
+
 
     private Date parsePublishedDate() {
         try {

@@ -42,14 +42,13 @@
                     android:background="@drawable/detail_image_protector"
                     android:layout_height="match_parent" />
 
-
-
             </FrameLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:layoutAnimation="@anim/layout_animation_title"
                 android:layout_marginStart="@dimen/detail_toolbar_margin_start"
                 android:layout_marginTop="@dimen/detail_toolbar_margin_top"
                 android:background="@null"
@@ -60,7 +59,6 @@
 
 
     </android.support.design.widget.AppBarLayout>
-
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll_view"
@@ -74,7 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layoutAnimation="@anim/layout_animation_from_bottom"
+            android:layoutAnimation="@anim/layout_animation_body_text"
+            android:id="@+id/body_view"
             android:maxWidth="@dimen/detail_card_max_width"
             android:orientation="vertical">
 
