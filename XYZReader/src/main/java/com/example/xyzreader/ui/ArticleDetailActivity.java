@@ -178,8 +178,8 @@ public class ArticleDetailActivity extends FragmentActivity
 
             if (mPager.getChildCount() > 0) {
                 int pageCount = mPager.getCurrentItem();
-                Timber.i("pageCount: " + pageCount);
-                view = ((ArticleDetailFragment) mPagerAdapter.getItem(pageCount)).ivPhotoView;
+                ArticleDetailFragment fragment = (ArticleDetailFragment) mPager.getAdapter().instantiateItem(mPager, pageCount);
+                view = fragment.getView().findViewById(R.id.iv_photo);
             }
 
             if (view != null) {

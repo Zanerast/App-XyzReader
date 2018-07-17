@@ -53,8 +53,6 @@ public class ArticleListActivity extends AppCompatActivity implements
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    private static final String EXTRA_STARTING_POSITION = "starting_list_position";
-    private static final String EXTRA_CURRENT_POSITION = "final_list_position";
 
     private boolean mIsRefreshing = false;
 
@@ -128,22 +126,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         refresh();
     }
 
-//    @Override
-//    public void onActivityReenter(int resultCode, Intent data) {
-//        super.onActivityReenter(resultCode, data);
-//        Timber.i("onActivityReenter() resultCode: " + resultCode);
-//        setResult(Activity.RESULT_OK);
-//        reEnterBundle = new Bundle(data.getExtras());
-//        int startingPosition = reEnterBundle.getInt(EXTRA_STARTING_POSITION);
-//        int currentPosition = reEnterBundle.getInt(EXTRA_CURRENT_POSITION);
-//        if (startingPosition != currentPosition) {
-//            recyclerView.scrollToPosition(currentPosition);
-//        }
-//
-//        postponeEnterTransition();
-//        scheduleStartPostponedTransition(recyclerView);
-//    }
-
     private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -158,24 +140,10 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
 
-//    public void scheduleStartPostponedTransition(final View sharedElement) {
-//        sharedElement.getViewTreeObserver().addOnPreDrawListener(
-//                new ViewTreeObserver.OnPreDrawListener() {
-//                    @Override
-//                    public boolean onPreDraw() {
-//                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
-//                        Timber.i("scheduleStartPostponedTransition() onPreDraw() Transaction Name: "
-//                                + sharedElement.getTransitionName());
-//                        startPostponedEnterTransition();
-//                        return true;
-//                    }
-//                }
-//        );
-//    }
-
     private final SharedElementCallback exitTransitionCallback = new SharedElementCallback() {
         @Override
         public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            Timber.i("exitTransitionCallback()");
             super.onMapSharedElements(names, sharedElements);
 
             if (ArticleDetailActivity.sSelectedIndex < 0) {
@@ -191,9 +159,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
         private Cursor mCursor;
-        private int mPosition;
 
-        private static final String TRANSITION_NAME = "transition";
 
         public Adapter(Cursor cursor) {
             mCursor = cursor;
@@ -220,8 +186,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 
                     String transitionName = getResources().getString(R.string.transition_name) + vh.getAdapterPosition();
-//                    vh.thumbnailView.setTransitionName(transitionName);
-//                    Timber.i("Start Transition: " + vh.thumbnailView.getTransitionName());
 
                     ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
                             ArticleListActivity.this, vh.thumbnailView,
@@ -247,7 +211,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             mCursor.moveToPosition(position);
-            mPosition = position;
 
             holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
             Date publishedDate = parsePublishedDate();
