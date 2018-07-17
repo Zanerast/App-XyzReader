@@ -1,12 +1,10 @@
 package com.example.xyzreader.ui;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.graphics.Palette;
+import android.support.v4.app.SharedElementCallback;
 import android.util.TypedValue;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 
 import android.database.Cursor;
@@ -27,7 +25,9 @@ import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 
-import butterknife.BindView;
+import java.util.List;
+import java.util.Map;
+
 import timber.log.Timber;
 
 /**
@@ -35,9 +35,11 @@ import timber.log.Timber;
  */
 public class ArticleDetailActivity extends FragmentActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
-    private Cursor mCursor;
-    private long mStartId;
 
+    public static final String EXTRA_POSITION = "position";
+    public static int sSelectedIndex = -1;
+
+    private long mStartId;
     private long mSelectedItemId;
     private int mSelectedItemUpButtonFloor = Integer.MAX_VALUE;
     private int mTopInset;
@@ -46,6 +48,7 @@ public class ArticleDetailActivity extends FragmentActivity
     private MyPagerAdapter mPagerAdapter;
     private View mUpButtonContainer;
     private View mUpButton;
+    private Cursor mCursor;
 
 
     @Override
@@ -62,19 +65,26 @@ public class ArticleDetailActivity extends FragmentActivity
 
         getSupportLoaderManager().initLoader(0, null, this);
 
+
         mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageMargin((int) TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
         mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
+        sSelectedIndex = getIntent().getIntExtra(EXTRA_POSITION, 0);
+        Timber.i("Selected Index: " + sSelectedIndex);
         mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+
             @Override
             public void onPageSelected(int position) {
+                sSelectedIndex = position;
+                Timber.i("Selected Index: " + sSelectedIndex);
                 if (mCursor != null) {
                     mCursor.moveToPosition(position);
                 }
                 mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
+                updateUpButtonPosition();
             }
         });
 
@@ -84,6 +94,7 @@ public class ArticleDetailActivity extends FragmentActivity
             @Override
             public void onClick(View view) {
                 onBackPressed();
+
             }
         });
 
@@ -121,6 +132,7 @@ public class ArticleDetailActivity extends FragmentActivity
 
         mCursor = cursor;
         mPagerAdapter.notifyDataSetChanged();
+        setEnterSharedElementCallback(enterTransitionCallback);
 
         // Select the start ID
         if (mStartId > 0) {
@@ -157,6 +169,25 @@ public class ArticleDetailActivity extends FragmentActivity
         mUpButton.setTranslationY(Math.min(mSelectedItemUpButtonFloor - upButtonNormalBottom, 0));
     }
 
+
+    private final SharedElementCallback enterTransitionCallback = new SharedElementCallback() {
+        @SuppressLint("NewApi")
+        @Override
+        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            View view = null;
+
+            if (mPager.getChildCount() > 0) {
+                int pageCount = mPager.getCurrentItem();
+                Timber.i("pageCount: " + pageCount);
+                view = ((ArticleDetailFragment) mPagerAdapter.getItem(pageCount)).ivPhotoView;
+            }
+
+            if (view != null) {
+                sharedElements.put(names.get(0), view);
+            }
+        }
+    };
+
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
@@ -175,7 +206,6 @@ public class ArticleDetailActivity extends FragmentActivity
 
         @Override
         public Fragment getItem(int position) {
-            Timber.i("getItem() position: " + position);
             mCursor.moveToPosition(position);
             return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID), position);
         }

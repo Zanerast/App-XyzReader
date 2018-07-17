@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +18,6 @@ import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.example.xyzreader.MyDebugTree;
@@ -30,6 +30,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,7 +53,13 @@ public class ArticleListActivity extends AppCompatActivity implements
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
+    private static final String EXTRA_STARTING_POSITION = "starting_list_position";
+    private static final String EXTRA_CURRENT_POSITION = "final_list_position";
+
     private boolean mIsRefreshing = false;
+
+    Adapter adapter;
+    GridLayoutManager gridLayoutManager;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
@@ -63,6 +71,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
+        setExitSharedElementCallback(exitTransitionCallback);
 
         plant(new MyDebugTree());
         ButterKnife.bind(this);
@@ -99,11 +108,11 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
 
-        Adapter adapter = new Adapter(cursor);
+        adapter = new Adapter(cursor);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
         int columnCount = getResources().getInteger(R.integer.list_column_count);
-        GridLayoutManager gridLayoutManager =
+        gridLayoutManager =
                 new GridLayoutManager(this, columnCount);
         recyclerView.setLayoutManager(gridLayoutManager);
         refreshLayout.setRefreshing(false);
@@ -119,22 +128,21 @@ public class ArticleListActivity extends AppCompatActivity implements
         refresh();
     }
 
-    @Override
-    public void onActivityReenter(int resultCode, Intent data) {
-        super.onActivityReenter(resultCode, data);
-        postponeEnterTransition();
-        recyclerView.getViewTreeObserver().addOnPreDrawListener(
-                new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        recyclerView.requestLayout();
-                        startPostponedEnterTransition();
-                        return true;
-                    }
-                }
-        );
-    }
+//    @Override
+//    public void onActivityReenter(int resultCode, Intent data) {
+//        super.onActivityReenter(resultCode, data);
+//        Timber.i("onActivityReenter() resultCode: " + resultCode);
+//        setResult(Activity.RESULT_OK);
+//        reEnterBundle = new Bundle(data.getExtras());
+//        int startingPosition = reEnterBundle.getInt(EXTRA_STARTING_POSITION);
+//        int currentPosition = reEnterBundle.getInt(EXTRA_CURRENT_POSITION);
+//        if (startingPosition != currentPosition) {
+//            recyclerView.scrollToPosition(currentPosition);
+//        }
+//
+//        postponeEnterTransition();
+//        scheduleStartPostponedTransition(recyclerView);
+//    }
 
     private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
         @Override
@@ -149,8 +157,43 @@ public class ArticleListActivity extends AppCompatActivity implements
         startService(new Intent(this, UpdaterService.class));
     }
 
+
+//    public void scheduleStartPostponedTransition(final View sharedElement) {
+//        sharedElement.getViewTreeObserver().addOnPreDrawListener(
+//                new ViewTreeObserver.OnPreDrawListener() {
+//                    @Override
+//                    public boolean onPreDraw() {
+//                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
+//                        Timber.i("scheduleStartPostponedTransition() onPreDraw() Transaction Name: "
+//                                + sharedElement.getTransitionName());
+//                        startPostponedEnterTransition();
+//                        return true;
+//                    }
+//                }
+//        );
+//    }
+
+    private final SharedElementCallback exitTransitionCallback = new SharedElementCallback() {
+        @Override
+        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            super.onMapSharedElements(names, sharedElements);
+
+            if (ArticleDetailActivity.sSelectedIndex < 0) {
+                // When transitioning out, use the view already specified in makeSceneTransition
+            } else {
+                // When transitioning back in, use the thumbnail at index the user had swiped to in the pager activity
+                sharedElements.put(names.get(0), gridLayoutManager.findViewByPosition(ArticleDetailActivity.sSelectedIndex));
+                ArticleDetailActivity.sSelectedIndex = -1;
+            }
+        }
+    };
+
+
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
         private Cursor mCursor;
+        private int mPosition;
+
+        private static final String TRANSITION_NAME = "transition";
 
         public Adapter(Cursor cursor) {
             mCursor = cursor;
@@ -166,17 +209,20 @@ public class ArticleListActivity extends AppCompatActivity implements
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.list_item_article, parent, false);
             final ViewHolder vh = new ViewHolder(view);
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    String transitionName = getResources().getString(R.string.transition_photo) + vh.getAdapterPosition();
-                    Timber.i("Start Transition: " + transitionName);
-
                     Intent intent = new Intent(Intent.ACTION_VIEW,
                             ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
+                    intent.putExtra(ArticleDetailActivity.EXTRA_POSITION, vh.getAdapterPosition());
 
-                    vh.thumbnailView.setTransitionName(transitionName);
+
+                    String transitionName = getResources().getString(R.string.transition_name) + vh.getAdapterPosition();
+//                    vh.thumbnailView.setTransitionName(transitionName);
+//                    Timber.i("Start Transition: " + vh.thumbnailView.getTransitionName());
+
                     ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
                             ArticleListActivity.this, vh.thumbnailView,
                             transitionName);
@@ -201,6 +247,8 @@ public class ArticleListActivity extends AppCompatActivity implements
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             mCursor.moveToPosition(position);
+            mPosition = position;
+
             holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
             Date publishedDate = parsePublishedDate();
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {

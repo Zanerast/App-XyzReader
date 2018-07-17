@@ -19,7 +19,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.Loader;
@@ -77,7 +76,6 @@ public class ArticleDetailFragment extends Fragment implements
 
 
     public static final String ARG_ITEM_ID = "item_id";
-    public static final String ARG_TRANSITION_NAME = "transition_name";
     private static final String ARG_ITEM_POSITION = "item_position";
 
     private Cursor mCursor;
@@ -128,8 +126,6 @@ public class ArticleDetailFragment extends Fragment implements
             mItemId = getArguments().getLong(ARG_ITEM_ID);
             mPosition = getArguments().getInt(ARG_ITEM_POSITION);
         }
-
-        Timber.i("mItemId: " + mItemId + ". mPostion: " + mPosition);
 
         setHasOptionsMenu(true);
     }
@@ -191,8 +187,6 @@ public class ArticleDetailFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        Timber.i("ID: itemId" + mItemId + " " + "onCreateLoader() LoaderId(int i): " + i);
-
         return ArticleLoader.newInstanceForItemId(getActivity(), mItemId);
     }
 
@@ -249,8 +243,6 @@ public class ArticleDetailFragment extends Fragment implements
     }
 
     private void bindViews() {
-        Timber.v("ID: itemId" + mItemId + " " + "bindViews()");
-
         if (mRootView == null) {
             return;
         }
@@ -299,11 +291,7 @@ public class ArticleDetailFragment extends Fragment implements
                                                 }
                                             });
                                     ivPhotoView.setImageBitmap(imageContainer.getBitmap());
-
-                                    scheduleStartPostponedTransition(ivPhotoView);
-
                                 }
-
                             }
 
                             @Override
@@ -312,7 +300,7 @@ public class ArticleDetailFragment extends Fragment implements
                         });
             }
 
-            mTransitionName = getResources().getString(R.string.transition_photo) + mPosition;
+            mTransitionName = getResources().getString(R.string.transition_name) + mPosition;
             ivPhotoView.setTransitionName(mTransitionName);
             scheduleStartPostponedTransition(ivPhotoView);
         } else {
@@ -325,7 +313,6 @@ public class ArticleDetailFragment extends Fragment implements
     }
 
     private void setColors() {
-        Timber.i(tvAuthor.getText().toString());
         if (mPalette.getVibrantSwatch() != null) {
             int toolbarColor = mPalette.getDarkVibrantColor(getResources().getColor(R.color.theme_primary));
             collapsingToolbar.setBackgroundColor(toolbarColor);
@@ -377,9 +364,9 @@ public class ArticleDetailFragment extends Fragment implements
         }
     }
 
-
+//    https://www.androiddesignpatterns.com/2015/03/activity-postponed-shared-element-transitions-part3b.html
     public void scheduleStartPostponedTransition(final View sharedElement) {
-        Timber.i("Transition Name: " + mTransitionName);
+        Timber.i("Start postponed Transition Name: " + mTransitionName);
         sharedElement.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
                     @Override
@@ -392,5 +379,7 @@ public class ArticleDetailFragment extends Fragment implements
                     }
                 });
     }
+
+
 
 }
