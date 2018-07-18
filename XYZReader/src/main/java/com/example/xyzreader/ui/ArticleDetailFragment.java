@@ -4,14 +4,16 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -25,17 +27,15 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.format.DateUtils;
-import android.transition.Slide;
-import android.transition.TransitionInflater;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -54,15 +54,10 @@ import timber.log.Timber;
  * tablets) or a {@link ArticleDetailActivity} on handsets.
  */
 public class ArticleDetailFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, AppBarLayout.OnOffsetChangedListener,
-        NestedScrollView.OnScrollChangeListener {
+        LoaderManager.LoaderCallbacks<Cursor>, AppBarLayout.OnOffsetChangedListener {
 
-    @BindView(R.id.tv_article_author)
-    TextView tvAuthor;
-    @BindView(R.id.tv_article_date)
-    TextView tvDate;
-    @BindView(R.id.tv_article_body)
-    TextView tvBodyView;
+    @BindView(R.id.rv_article_body)
+    RecyclerView rvBodyView;
     @BindView(R.id.iv_photo)
     ImageView ivPhotoView;
     @BindView(R.id.collapsing_toolbar)
@@ -75,10 +70,6 @@ public class ArticleDetailFragment extends Fragment implements
     AppBarLayout appBar;
     @BindView(R.id.fragment_background)
     CoordinatorLayout background;
-    @BindView(R.id.scroll_view)
-    NestedScrollView scrollView;
-    @BindView(R.id.body_view)
-    MaxWidthLinearLayout bodyView;
 
 
     public static final String ARG_ITEM_ID = "item_id";
@@ -87,10 +78,8 @@ public class ArticleDetailFragment extends Fragment implements
     private Cursor mCursor;
     private long mItemId;
     private View mRootView;
-    private int mMutedColor = 0xFF333333;
     private static final int PERCENTAGE_TO_SHOW_IMAGE = 20;
     private int mMaxScrollSize;
-    private ColorDrawable mStatusBarColorDrawable;
     public Palette mPalette;
     private boolean mIsImageHidden;
     private String mTransitionName;
@@ -174,7 +163,6 @@ public class ArticleDetailFragment extends Fragment implements
         ButterKnife.bind(this, mRootView);
 
         appBar.addOnOffsetChangedListener(this);
-        scrollView.setOnScrollChangeListener(this);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,15 +215,6 @@ public class ArticleDetailFragment extends Fragment implements
         bindViews();
     }
 
-    @Override
-    public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-        if (scrollY > (v.getMeasuredHeight() / 2)){
-
-            tvBodyView.setMaxLines(Integer.MAX_VALUE);
-        }
-    }
-
-
 
     private Date parsePublishedDate() {
         try {
@@ -253,32 +232,41 @@ public class ArticleDetailFragment extends Fragment implements
             return;
         }
 
-        tvBodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
-
         if (mCursor != null) {
             mRootView.setAlpha(0);
             mRootView.setVisibility(View.VISIBLE);
             mRootView.animate().alpha(1);
             toolbar.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
             Date publishedDate = parsePublishedDate();
-            tvAuthor.setText(Html.fromHtml("By " + mCursor.getString(ArticleLoader.Query.AUTHOR)));
+
+            String author = String.valueOf(Html.fromHtml("By " + mCursor.getString(ArticleLoader.Query.AUTHOR)));
+            String date;
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
-                tvDate.setText(
-                        Html.fromHtml(DateUtils.getRelativeTimeSpanString(
+                date = String.valueOf(Html.fromHtml(DateUtils.getRelativeTimeSpanString(
                                 publishedDate.getTime(),
                                 System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
                                 DateUtils.FORMAT_ABBREV_ALL).toString()));
             } else {
                 // If date is before 1902, just show the string
-                tvDate.setText(
-                        Html.fromHtml(outputFormat.format(publishedDate)));
-
+                date = String.valueOf(Html.fromHtml(outputFormat.format(publishedDate)));
             }
 
-            tvBodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
+            String longText = String.valueOf(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
                     .replaceAll("\r\n\r\n", "<br /><br />")
                     .replaceAll("\r\n", " ")
                     .replaceAll("  ", "")));
+
+            String[] tempParagraphs = longText.split("\\r?\\n");
+            ArrayList<String> paragraphs = new ArrayList<>();
+            Collections.addAll(paragraphs, tempParagraphs);
+            paragraphs.add(0, author);
+            paragraphs.add(1, date);
+
+            AdapterLongBodyText bodyAdapter = new AdapterLongBodyText(paragraphs);
+
+            rvBodyView.setAdapter(bodyAdapter);
+            LinearLayoutManager layout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+            rvBodyView.setLayoutManager(layout);
 
             if (mPalette == null) {
                 ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
@@ -313,8 +301,6 @@ public class ArticleDetailFragment extends Fragment implements
             Timber.e("ID: itemId" + mItemId + " " + "bindViews() mCursor is null");
             mRootView.setVisibility(View.GONE);
             toolbar.setTitle("N/A");
-            tvAuthor.setText("N/A");
-            tvBodyView.setText("N/A");
         }
     }
 
@@ -385,7 +371,6 @@ public class ArticleDetailFragment extends Fragment implements
                     }
                 });
     }
-
 
 
 }

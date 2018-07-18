@@ -39,8 +39,8 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:background="@drawable/detail_image_protector"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:background="@drawable/detail_image_protector" />
 
             </FrameLayout>
 
@@ -48,10 +48,10 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layoutAnimation="@anim/layout_animation_title"
                 android:layout_marginStart="@dimen/detail_toolbar_margin_start"
                 android:layout_marginTop="@dimen/detail_toolbar_margin_top"
                 android:background="@null"
+                android:layoutAnimation="@anim/layout_animation_title"
                 app:layout_collapseMode="pin" />
 
 
@@ -60,75 +60,40 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/scroll_view"
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        app:contentPaddingBottom="16dp"
+        app:contentPaddingLeft="16dp"
+        android:layoutAnimation="@anim/layout_animation_body_text"
         app:behavior_overlapTop="@dimen/detail_nested_scroll_overlay"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:contentPaddingRight="16dp">
 
-        <com.example.xyzreader.ui.MaxWidthLinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layoutAnimation="@anim/layout_animation_body_text"
-            android:id="@+id/body_view"
-            android:maxWidth="@dimen/detail_card_max_width"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardview"
+            <android.support.v7.widget.RecyclerView
+                android:clipToPadding="false"
+                android:id="@+id/rv_article_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="4dp"
-                app:cardElevation="4dp"
-                app:contentPaddingBottom="16dp"
-                app:contentPaddingLeft="16dp"
-                app:contentPaddingRight="16dp">
+                android:lineSpacingExtra="8dp"
+                android:paddingTop="@dimen/detail_body_padding_top"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                tools:text="Body Text" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
-                    <TextView
-                        android:id="@+id/tv_article_author"
-                        style="?android:attr/textAppearanceSmall"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/detail_body_padding_top"
-                        tools:text="Author" />
-
-                    <TextView
-                        android:id="@+id/tv_article_date"
-                        style="?android:attr/textAppearanceSmall"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:text="Date" />
-
-                    <TextView
-                        android:id="@+id/tv_article_body"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:lineSpacingExtra="8dp"
-                        android:maxLines="@integer/detail_body_text_max_lines"
-                        android:paddingTop="@dimen/detail_body_padding_top"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"
-                        tools:text="Body Text" />
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-        </com.example.xyzreader.ui.MaxWidthLinearLayout>
-
-
-    </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/share_fab"

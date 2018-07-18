@@ -12,14 +12,11 @@ import android.util.Log;
  */
 public class ArticleLoader extends CursorLoader {
 
-    private static final String LOG_TAG = ArticleLoader.class.getName();
-
     public static Loader<Cursor> newAllArticlesInstance(Context context) {
         return new ArticleLoader(context, ItemsContract.Items.buildDirUri());
     }
 
     public static ArticleLoader newInstanceForItemId(Context context, long itemId) {
-        Log.i(LOG_TAG, "MSG! newInstanceForItemId() itemId: " + itemId);
         return new ArticleLoader(context, ItemsContract.Items.buildItemUri(itemId));
     }
 

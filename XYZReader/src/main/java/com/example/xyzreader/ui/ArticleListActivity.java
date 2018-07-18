@@ -146,7 +146,6 @@ public class ArticleListActivity extends AppCompatActivity implements
     private final SharedElementCallback exitTransitionCallback = new SharedElementCallback() {
         @Override
         public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-            Timber.i("exitTransitionCallback()");
             super.onMapSharedElements(names, sharedElements);
 
             if (ArticleDetailActivity.sSelectedIndex < 0) {
