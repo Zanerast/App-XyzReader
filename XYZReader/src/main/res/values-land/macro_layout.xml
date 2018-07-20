@@ -3,6 +3,7 @@
     <!-- list -->
     <integer name="list_column_count">2</integer>
     <dimen name="list_item_card_margin_horizontal">12dp</dimen>
+    <dimen name="detail_card_margin_horizontal">60dp</dimen>
 
     <!-- detail -->
     <dimen name="detail_photo_height">224dp</dimen>

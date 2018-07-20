@@ -70,6 +70,8 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Timber.i("onCreate()");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
         setExitSharedElementCallback(exitTransitionCallback);
@@ -90,6 +92,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     @Override
     protected void onStart() {
+        Timber.i("onStart()");
+        Timber.i("Selected Index: " + ArticleDetailActivity.sSelectedIndex);
+        recyclerView.scrollToPosition(ArticleDetailActivity.sSelectedIndex);
         super.onStart();
         registerReceiver(mRefreshingReceiver,
                 new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
@@ -146,15 +151,15 @@ public class ArticleListActivity extends AppCompatActivity implements
     private final SharedElementCallback exitTransitionCallback = new SharedElementCallback() {
         @Override
         public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            Timber.i("onMapSharedElements()");
+
             super.onMapSharedElements(names, sharedElements);
 
             if (ArticleDetailActivity.sSelectedIndex < 0) {
                 // When transitioning out, use the view already specified in makeSceneTransition
-                Timber.i("selectedIndex < 0");
             } else {
                 // When transitioning back in, use the thumbnail at index the user had swiped to in the pager activity
                 sharedElements.put(names.get(0), gridLayoutManager.findViewByPosition(ArticleDetailActivity.sSelectedIndex));
-                Timber.i("Shared Element Name: " + sharedElements.get(names.get(0)).getTransitionName());
                 ArticleDetailActivity.sSelectedIndex = -1;
             }
         }

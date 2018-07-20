@@ -11,23 +11,22 @@
 
     <dimen name="detail_body_padding_top">20dp</dimen>
     <dimen name="detail_card_max_width">340dp</dimen>
+    <dimen name="detail_card_margin_horizontal">24dp</dimen>
     <dimen name="detail_collapsing_toolbar_height">300dp</dimen>
-    <dimen name="detail_nested_scroll_overlay">78dp</dimen>
+    <dimen name="detail_nested_scroll_overlay">64dp</dimen>
     <dimen name="detail_photo_height">304dp</dimen>
     <dimen name="detail_toolbar_margin_start">22dp</dimen>
     <dimen name="detail_toolbar_margin_top">@dimen/detail_activity_action_up_margin_top</dimen>
 
     <!-- fab -->
-    <dimen name="fab_elevation">8dp</dimen>
     <dimen name="fab_margin">32dp</dimen>
 
     <!-- list-->
     <dimen name="list_item_body_text_padding_bottom">8dp</dimen>
     <dimen name="list_item_body_text_padding_horizontal">8dp</dimen>
-    <dimen name="list_item_card_margin_horizontal">16dp</dimen>
-    <dimen name="list_item_card_margin_vertical">8dp</dimen>
+    <dimen name="list_item_card_margin_horizontal">12dp</dimen>
+    <dimen name="list_item_card_margin_vertical">6dp</dimen>
     <dimen name="list_item_photo_margin_horizontal">8dp</dimen>
-    <!--<dimen name="list_item_photo_margin_top">8dp</dimen>-->
     <dimen name="list_item_title_padding_bottom">6dp</dimen>
     <dimen name="list_item_title_top_padding">4dp</dimen>
     <dimen name="list_refresh_margin_top">30dp</dimen>

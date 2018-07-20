@@ -1,5 +1,6 @@
 package com.example.xyzreader.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
@@ -54,7 +55,7 @@ import timber.log.Timber;
  * tablets) or a {@link ArticleDetailActivity} on handsets.
  */
 public class ArticleDetailFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, AppBarLayout.OnOffsetChangedListener {
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     @BindView(R.id.rv_article_body)
     RecyclerView rvBodyView;
@@ -124,36 +125,13 @@ public class ArticleDetailFragment extends Fragment implements
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        if (mMaxScrollSize == 0)
-            mMaxScrollSize = appBarLayout.getTotalScrollRange();
 
-        int currentScrollPercentage = (Math.abs(i)) * 100
-                / mMaxScrollSize;
-
-        if (currentScrollPercentage >= PERCENTAGE_TO_SHOW_IMAGE) {
-            if (!mIsImageHidden) {
-                mIsImageHidden = true;
-
-                ViewCompat.animate(fab).scaleY(0).scaleX(0).start();
-            }
-        }
-
-        if (currentScrollPercentage < PERCENTAGE_TO_SHOW_IMAGE) {
-            if (mIsImageHidden) {
-                mIsImageHidden = false;
-                ViewCompat.animate(fab).scaleY(1).scaleX(1).start();
-            }
-        }
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        int loaderId = (int) mItemId;
 
-        getLoaderManager().initLoader(loaderId, null, this);
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -161,8 +139,6 @@ public class ArticleDetailFragment extends Fragment implements
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
         ButterKnife.bind(this, mRootView);
-
-        appBar.addOnOffsetChangedListener(this);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,7 +161,9 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
 
-        if (!isAdded()) {
+        Activity activity = getActivity();
+
+        if (!isAdded() || activity == null) {
             if (cursor != null) {
                 cursor.close();
             }
@@ -203,8 +181,7 @@ public class ArticleDetailFragment extends Fragment implements
             bindViews();
         }
 
-        int loadId = (int) mItemId;
-        getLoaderManager().destroyLoader(loadId);
+        getLoaderManager().destroyLoader(0);
     }
 
     @Override
@@ -214,6 +191,8 @@ public class ArticleDetailFragment extends Fragment implements
         mCursor = null;
         bindViews();
     }
+
+
 
 
     private Date parsePublishedDate() {
@@ -232,7 +211,7 @@ public class ArticleDetailFragment extends Fragment implements
             return;
         }
 
-        if (mCursor != null) {
+        if (mCursor != null && isAdded()) {
             mRootView.setAlpha(0);
             mRootView.setVisibility(View.VISIBLE);
             mRootView.animate().alpha(1);

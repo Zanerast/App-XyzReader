@@ -71,6 +71,7 @@ public class ArticleDetailActivity extends FragmentActivity
 
 
         getSupportLoaderManager().initLoader(0, null, this);
+        sSelectedIndex = getIntent().getIntExtra(EXTRA_POSITION, 0);
 
 
         mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -79,14 +80,13 @@ public class ArticleDetailActivity extends FragmentActivity
         mPager.setPageMargin((int) TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
         mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
-        sSelectedIndex = getIntent().getIntExtra(EXTRA_POSITION, 0);
-        Timber.i("Selected Index: " + sSelectedIndex);
+
         mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
                 sSelectedIndex = position;
-                Timber.i("Selected Index: " + sSelectedIndex);
+
                 if (mCursor != null) {
                     mCursor.moveToPosition(position);
                 }
@@ -95,6 +95,9 @@ public class ArticleDetailActivity extends FragmentActivity
                 updateUpButtonPosition();
             }
         });
+
+        mPager.setPageTransformer(false, new DepthPageTransformer());
+
 
         mUpButtonContainer = findViewById(R.id.up_container);
         mUpButton = findViewById(R.id.action_up);
@@ -135,8 +138,11 @@ public class ArticleDetailActivity extends FragmentActivity
         return ArticleLoader.newAllArticlesInstance(this);
     }
 
+
+
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+
 
         mCursor = cursor;
         mPagerAdapter.notifyDataSetChanged();
@@ -162,6 +168,8 @@ public class ArticleDetailActivity extends FragmentActivity
         mCursor = null;
         mPagerAdapter.notifyDataSetChanged();
     }
+
+
 
     private void updateStatusBar() {
         Window window = getWindow();
@@ -197,6 +205,8 @@ public class ArticleDetailActivity extends FragmentActivity
             }
         }
     };
+
+
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
 

@@ -71,20 +71,4 @@ public class AdapterLongBodyText extends RecyclerView.Adapter<AdapterLongBodyTex
         }
     }
 
-    public class ViewHolderAuthor extends RecyclerView.ViewHolder {
-
-        TextView textView;
-
-        public ViewHolderAuthor(View itemView) {
-            super(itemView);
-
-            textView = (TextView) itemView.findViewById(R.id.tv_long_text);
-            textView.setTypeface(Typeface.createFromAsset(itemView.getResources().getAssets(), "Rosario-Regular.ttf"));
-        }
-
-        public void bind(int position) {
-            textView.setText(longText.get(position));
-        }
-    }
-
 }

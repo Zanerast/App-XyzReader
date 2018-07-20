@@ -64,13 +64,12 @@
         android:id="@+id/cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginStart="@dimen/detail_card_margin_horizontal"
+        android:layout_marginEnd="@dimen/detail_card_margin_horizontal"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="4dp"
-        app:cardElevation="4dp"
         app:contentPaddingBottom="16dp"
         app:contentPaddingLeft="16dp"
-        android:layoutAnimation="@anim/layout_animation_body_text"
         app:behavior_overlapTop="@dimen/detail_nested_scroll_overlay"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:contentPaddingRight="16dp">
@@ -85,6 +84,8 @@
                 android:id="@+id/rv_article_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
+                android:layoutAnimation="@anim/layout_animation_body_text"
                 android:lineSpacingExtra="8dp"
                 android:paddingTop="@dimen/detail_body_padding_top"
                 android:textColor="@android:color/black"
@@ -100,7 +101,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:elevation="@dimen/fab_elevation"
         android:src="@drawable/ic_share"
         app:layout_anchor="@id/cardview"
         app:layout_anchorGravity="top|right|end" />
