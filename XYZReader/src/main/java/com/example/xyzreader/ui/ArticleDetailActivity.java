@@ -4,10 +4,7 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.SharedElementCallback;
-import android.transition.Slide;
-import android.transition.TransitionInflater;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.Window;
 
 import android.database.Cursor;
@@ -23,8 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -96,7 +91,7 @@ public class ArticleDetailActivity extends FragmentActivity
             }
         });
 
-        mPager.setPageTransformer(false, new DepthPageTransformer());
+        mPager.setPageTransformer(false, new CustomPageTransformer());
 
 
         mUpButtonContainer = findViewById(R.id.up_container);
