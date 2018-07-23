@@ -2,9 +2,11 @@ package com.example.xyzreader.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -24,39 +26,26 @@ public class CustomPageTransformer implements ViewPager.PageTransformer {
     public void transformPage(View view, float position) {
         int pageWidth = view.getWidth();
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.share_fab);
+        RecyclerView articleBody = (RecyclerView) view.findViewById(R.id.rv_article_body);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
 
-        if (position <= -1.0F || position >= 1.0F) {
-//            view.findViewById(R.id.rv_article_body).setAlpha(0.0F);
-        } else if (position <= 1.0f) {
+        if (position <= -1) {
+            articleBody.setAlpha(0);
+        } else if (position <= 1) {
             view.findViewById(R.id.iv_photo).setTranslationX(-position * view.getWidth() / 2);
-//                view.findViewById(R.id.cardview).setTranslationX(pageWidth * -position);
+            fab.setRotation(360*position*2);
+
+            if (position < 0) { // animate the exiting page
+                articleBody.setAlpha(1+position);
+            } else { // animate the entering page
+                articleBody.setAlpha(1-position);
+            }
 
 
-//            ViewCompat.animate(fab).
-//                    rotation(135f).
-//                    withLayer().
-//                    setDuration(300L).
-//                    setInterpolator(new OvershootInterpolator()).
-//                    start();
+
         } else {
-//            AlphaAnimation animation1 = new AlphaAnimation(0.0f, 1.0f);
-//            animation1.setDuration(1000);
-//            animation1.setStartOffset(2000);
-//            animation1.setFillAfter(true);
-//            view.findViewById(R.id.rv_article_body).startAnimation(animation1);
+            articleBody.setAlpha(0);
         }
-
-//            // Fade the page out.
-//
-//
-//            // Counteract the default slide transition
-//
-//
-//            // Scale the page down (between MIN_SCALE and 1)
-//            float scaleFactor = MIN_SCALE
-//                    + (1 - MIN_SCALE) * (1 - Math.abs(position));
-//            view.setScaleX(scaleFactor);
-//            view.setScaleY(scaleFactor);
 
     }
 }

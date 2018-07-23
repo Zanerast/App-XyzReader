@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v4.content.Loader;
@@ -20,6 +23,7 @@ import android.transition.Slide;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
@@ -40,6 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
+import static com.example.xyzreader.ui.ArticleDetailActivity.sSelectedIndex;
 import static timber.log.Timber.*;
 
 /**
@@ -93,9 +98,20 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         Timber.i("onStart()");
-        Timber.i("Selected Index: " + ArticleDetailActivity.sSelectedIndex);
-        recyclerView.scrollToPosition(ArticleDetailActivity.sSelectedIndex);
         super.onStart();
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            ActivityCompat.postponeEnterTransition(this);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Timber.i("RV Index: " + sSelectedIndex);
+                    recyclerView.scrollToPosition(sSelectedIndex);
+                    scheduleStartPostponedTransition();
+                }
+            }, 100);
+        }
         registerReceiver(mRefreshingReceiver,
                 new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
     }
@@ -155,16 +171,35 @@ public class ArticleListActivity extends AppCompatActivity implements
 
             super.onMapSharedElements(names, sharedElements);
 
-            if (ArticleDetailActivity.sSelectedIndex < 0) {
+            if (sSelectedIndex < 0) {
                 // When transitioning out, use the view already specified in makeSceneTransition
             } else {
                 // When transitioning back in, use the thumbnail at index the user had swiped to in the pager activity
-                sharedElements.put(names.get(0), gridLayoutManager.findViewByPosition(ArticleDetailActivity.sSelectedIndex));
-                ArticleDetailActivity.sSelectedIndex = -1;
+                sharedElements.put(names.get(0), gridLayoutManager.findViewByPosition(sSelectedIndex));
+                sSelectedIndex = -1;
             }
         }
     };
 
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+
+
+    }
+
+    private void scheduleStartPostponedTransition() {
+        recyclerView.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        recyclerView.requestLayout();
+                        ActivityCompat.startPostponedEnterTransition(ArticleListActivity.this);
+                        return true;
+                    }
+                });
+    }
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
         private Cursor mCursor;
