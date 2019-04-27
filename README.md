@@ -1,4 +1,4 @@
-# Udacity Project - Sandwich Club 
+# Udacity Project - XYZ Reader
 
 ## Project Overview
 Android Project for [Udacity Android Developer Nanodegree.](https://eu.udacity.com/course/android-developer-nanodegree-by-google--nd801) 
