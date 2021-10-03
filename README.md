@@ -3,15 +3,15 @@
 ## Project Overview
 Android Project for [Udacity Android Developer Nanodegree.](https://eu.udacity.com/course/android-developer-nanodegree-by-google--nd801) 
 
-In this project, I had to redesign an app to follow the Material Design guidelines and translate a set of static design mocks to a living and breathing app.
+In this project, you will redesign an app to follow the Material Design guidelines and translate a set of static design mocks to a living and breathing app.
 
-## Goal of this project
-This project gave an opportunity to improve an app’s design. 
+## Why this Project
+This project gives you an opportunity to improve an app’s design, a vital skill for building apps users will love. It also replicates a common developer task of updating and changing an app's design as new standards are released.
 
-## What Did I Learn?
-Through this project, I learnt:
-- The fundamentals of Android design
-- Material Design guidelines
+## What Will I Learn?
+Through this project, you will:
+- Understand the fundamentals of Android design
+- Apply Material Design guidelines to a mobile application
 - Separate an interface into surfaces
 - Effectively use transitions and motion
 
